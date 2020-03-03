@@ -1,0 +1,30 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/bid-it/src",
+  "monorepo": true,
+  "root": "apps/bid-it",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/bid-it/tsconfig.app.json"
+  },
+  "projects": {
+    "bid-it": {
+      "type": "application",
+      "root": "apps/bid-it",
+      "entryFile": "main",
+      "sourceRoot": "apps/bid-it/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/bid-it/tsconfig.app.json"
+      }
+    },
+    "bid-engine": {
+      "type": "application",
+      "root": "apps/bid-engine",
+      "entryFile": "main",
+      "sourceRoot": "apps/bid-engine/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/bid-engine/tsconfig.app.json"
+      }
+    }
+  }
+}
