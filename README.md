@@ -51,6 +51,7 @@ Frontend <-> Websocket Server <-> Queue -> Bid Service
 - Post New Bid
 
   request: dealId, dealerId, bidPrice
+
   reponse: bidId
 
 ## Reports
