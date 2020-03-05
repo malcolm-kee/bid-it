@@ -9,8 +9,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const options = new DocumentBuilder()
-    .setTitle('Order Service')
-    .setDescription('Order service API description')
+    .setTitle('Bid Service')
+    .setDescription('Bid service API description')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
