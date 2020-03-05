@@ -13,4 +13,4 @@ export type DealData = {
 
 export interface Deal extends Document, DealData {}
 
-export const DEAL_SCHEMA_NAME = 'Order';
+export const DEAL_SCHEMA_NAME = 'Deal';

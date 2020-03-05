@@ -1,8 +1,8 @@
-import { Module, Logger } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { DealModule } from './deal/deal.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -15,9 +15,19 @@ import { AppService } from './app.service';
         uri: configService.get<string>('DEALS_DB_URL'),
       }),
       inject: [ConfigService],
+      connectionName: 'deals',
     }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('USERS_DB_URL'),
+      }),
+      inject: [ConfigService],
+      connectionName: 'users',
+    }),
+    DealModule,
+    UserModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, Logger],
+  providers: [Logger],
 })
 export class AppModule {}
