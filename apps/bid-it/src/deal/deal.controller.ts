@@ -1,12 +1,26 @@
-import { Body, Controller, Get, Param, Post, Put, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Put,
+  Res,
+} from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { Response } from 'express';
-import { PostBidDto, CreateDealDto } from './deal.dto';
-import { DealService } from './deal.service';
 import { v4 as uuid } from 'uuid';
+import { CreateDealDto, PostBidDto } from './deal.dto';
+import { DealService } from './deal.service';
+import { BID_QUEUE } from './deal.type';
 
 @Controller('deal')
 export class DealController {
-  constructor(private readonly dealService: DealService) {}
+  constructor(
+    private readonly dealService: DealService,
+    @Inject(BID_QUEUE) private readonly client: ClientProxy
+  ) {}
 
   @Get()
   getActiveDeals() {
@@ -39,8 +53,7 @@ export class DealController {
       price: assignDealBidDto.price,
     };
 
-    // TODO: post message to queue
-    console.log(payload);
+    this.client.emit('place_bid', payload);
 
     return {
       message: 'Posted',
