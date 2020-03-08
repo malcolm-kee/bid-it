@@ -25,6 +25,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/bid-engine/tsconfig.app.json"
       }
+    },
+    "deal-data": {
+      "type": "library",
+      "root": "libs/deal-data",
+      "entryFile": "index",
+      "sourceRoot": "libs/deal-data/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/deal-data/tsconfig.lib.json"
+      }
     }
   }
 }

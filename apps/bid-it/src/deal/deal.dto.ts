@@ -57,3 +57,10 @@ export class PostBidDto {
   @IsNumber()
   readonly price: number;
 }
+
+export class AcceptBidDto {
+  readonly bidId: string;
+  readonly dealId: string;
+  readonly dealerId: string;
+  readonly price: number;
+}

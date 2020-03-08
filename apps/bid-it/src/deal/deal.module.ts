@@ -1,28 +1,15 @@
+import { DealDataModule } from '@app/deal-data';
 import { Module } from '@nestjs/common';
-import { Transport } from '@nestjs/microservices';
-import { MongooseModule } from '@nestjs/mongoose';
-import { DealController } from './deal.controller';
-import { DealSchema } from './deal.schema';
-import { DealService } from './deal.service';
-import { DEAL_SCHEMA_NAME, BID_QUEUE } from './deal.type';
 import { ConfigService } from '@nestjs/config';
-import { ClientProxyFactory } from '@nestjs/microservices';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { DealService } from './deal-service';
+import { DealController } from './deal.controller';
+import { BID_QUEUE } from './deal.type';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature(
-      [
-        {
-          name: DEAL_SCHEMA_NAME,
-          schema: DealSchema,
-        },
-      ],
-      'deals'
-    ),
-  ],
+  imports: [DealDataModule],
   controllers: [DealController],
   providers: [
-    DealService,
     {
       provide: BID_QUEUE,
       useFactory: (configService: ConfigService) => {
@@ -43,6 +30,7 @@ import { ClientProxyFactory } from '@nestjs/microservices';
       },
       inject: [ConfigService],
     },
+    DealService,
   ],
 })
 export class DealModule {}

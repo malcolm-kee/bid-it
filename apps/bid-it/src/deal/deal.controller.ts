@@ -1,24 +1,25 @@
+import { DealDataService } from '@app/deal-data';
 import {
   Body,
   Controller,
   Get,
   Inject,
+  Logger,
   Param,
   Post,
   Put,
   Res,
 } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, EventPattern } from '@nestjs/microservices';
 import { Response } from 'express';
 import { v4 as uuid } from 'uuid';
-import { CreateDealDto, PostBidDto } from './deal.dto';
-import { DealService } from './deal.service';
+import { AcceptBidDto, CreateDealDto, PostBidDto } from './deal.dto';
 import { BID_QUEUE } from './deal.type';
 
 @Controller('deal')
 export class DealController {
   constructor(
-    private readonly dealService: DealService,
+    private readonly dealService: DealDataService,
     @Inject(BID_QUEUE) private readonly client: ClientProxy
   ) {}
 
@@ -61,6 +62,14 @@ export class DealController {
     };
   }
 
-  // TODO: @EventPattern('bid_accepted')
-  // save the latest bid in db
+  @EventPattern('bid_accepted')
+  async updateDealBid(data: AcceptBidDto) {
+    const deal = await this.dealService.getOne(data.dealId);
+
+    if (!deal) {
+      Logger.error(`Deal not found for accepted deal. ${JSON.stringify(data)}`);
+    } else {
+      await this.dealService.updateDealBid(data);
+    }
+  }
 }

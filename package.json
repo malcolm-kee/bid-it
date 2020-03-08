@@ -27,6 +27,7 @@
     "@nestjs/microservices": "^6.11.11",
     "@nestjs/mongoose": "^6.3.1",
     "@nestjs/platform-express": "^6.10.14",
+    "@nestjs/schedule": "^0.2.0",
     "@nestjs/swagger": "^4.3.2",
     "amqp-connection-manager": "^3.2.0",
     "amqplib": "^0.5.5",
@@ -79,7 +80,12 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/apps/"
-    ]
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "@app/deal-data/(.*)": "<rootDir>/libs/deal-data/src/$1",
+      "@app/deal-data": "<rootDir>/libs/deal-data/src"
+    }
   }
 }
