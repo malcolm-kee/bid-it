@@ -72,3 +72,13 @@ Frontend <-> Websocket Server <-> Queue -> Bid Service
 
   - number of concurrent connections
   - latency
+
+## Additional Considerations/Improvements
+
+### Scaleability
+
+1. At the moment we use single queue for all bids, which is not very scaleable because we can't add additional queues when load is increasing. RabbitMQ supports [exchange with topic](https://www.rabbitmq.com/tutorials/tutorial-five-javascript.html) which would allows us to create separate queues based on arbitrary categorization.
+
+1. Using RabbitMQ's "exchange with topic", we can starts with single queue when load is low. When load is high, we can split the loads between multiple queues, based on the type of bid. For instance, one queue handles all car bids, while another queue will handle all other types of bids.
+
+1. However, at the moment NestJS does not supports exchange with topic as it is special features offered by RabbitMQ. The [`@golevelup/nestjs-rabbitmq`](https://www.npmjs.com/package/@golevelup/nestjs-rabbitmq) package seems like support the feature, but it is not very popular and I have not really look into it.

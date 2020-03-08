@@ -17,7 +17,7 @@ async function bootstrap() {
       queue: 'bid_queue',
       noAck: false,
       queueOptions: {
-        durable: false,
+        durable: true,
       },
     },
   });
