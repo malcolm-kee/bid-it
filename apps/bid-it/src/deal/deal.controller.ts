@@ -60,4 +60,7 @@ export class DealController {
       bidId,
     };
   }
+
+  // TODO: @EventPattern('bid_accepted')
+  // save the latest bid in db
 }
