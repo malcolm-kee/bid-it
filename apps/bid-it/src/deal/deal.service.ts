@@ -4,13 +4,13 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Interval } from '@nestjs/schedule';
 import { Queue } from 'bull';
-import { BID_QUEUE } from './deal.type';
+import { BID_QUEUE, EVENT_SERVICE } from './deal.type';
 
 @Injectable()
 export class DealService {
   constructor(
     private readonly dealService: DealDataService,
-    @Inject(BID_QUEUE) private readonly client: ClientProxy,
+    @Inject(EVENT_SERVICE) private readonly client: ClientProxy,
     @InjectQueue(BID_QUEUE) private readonly bidQueue: Queue
   ) {}
 

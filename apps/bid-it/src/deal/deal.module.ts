@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { DealController } from './deal.controller';
 import { DealService } from './deal.service';
-import { BID_QUEUE } from './deal.type';
+import { BID_QUEUE, EVENT_SERVICE } from './deal.type';
 
 @Module({
   imports: [
@@ -17,21 +17,13 @@ import { BID_QUEUE } from './deal.type';
   controllers: [DealController],
   providers: [
     {
-      provide: BID_QUEUE,
+      provide: EVENT_SERVICE,
       useFactory: (configService: ConfigService) => {
-        const BID_QUEUE_URL = configService.get<string>(
-          'BID_QUEUE_URL'
-        ) as string;
+        const redisUrl = configService.get<string>('REDIS_URL');
         return ClientProxyFactory.create({
-          transport: Transport.RMQ,
+          transport: Transport.REDIS,
           options: {
-            urls: [BID_QUEUE_URL],
-            queue: 'bid_queue',
-            noAck: false,
-            prefetchCount: 1,
-            queueOptions: {
-              durable: false,
-            },
+            url: redisUrl,
           },
         });
       },

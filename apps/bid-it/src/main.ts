@@ -11,17 +11,13 @@ async function bootstrap() {
   });
 
   app.connectMicroservice({
-    transport: Transport.RMQ,
+    transport: Transport.REDIS,
     options: {
-      urls: [app.get(ConfigService).get<string>('BID_QUEUE_URL') as string],
-      queue: 'bid_queue',
-      noAck: false,
-      prefetchCount: 1,
-      queueOptions: {
-        durable: false,
-      },
+      url: app.get(ConfigService).get('REDIS_URL'),
     },
   });
+
+  await app.startAllMicroservicesAsync();
 
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
