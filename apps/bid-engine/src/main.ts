@@ -9,8 +9,9 @@ async function bootstrap() {
       urls: [process.env.BID_QUEUE_URL as string],
       queue: 'bid_queue',
       noAck: false,
+      prefetchCount: 1,
       queueOptions: {
-        durable: true,
+        durable: false,
       },
     },
     logger: console,

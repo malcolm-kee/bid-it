@@ -1,14 +1,17 @@
-import { DealDataService } from '@app/deal-data';
+import { DealDataService, PlaceBidData } from '@app/deal-data';
+import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Interval } from '@nestjs/schedule';
+import { Queue } from 'bull';
 import { BID_QUEUE } from './deal.type';
 
 @Injectable()
 export class DealService {
   constructor(
     private readonly dealService: DealDataService,
-    @Inject(BID_QUEUE) private readonly client: ClientProxy
+    @Inject(BID_QUEUE) private readonly client: ClientProxy,
+    @InjectQueue(BID_QUEUE) private readonly bidQueue: Queue
   ) {}
 
   @Interval(1000)
@@ -21,5 +24,9 @@ export class DealService {
       Logger.log(`closed deal`);
       Logger.log(deal);
     }
+  }
+
+  placeBid(placeBidData: PlaceBidData) {
+    return this.bidQueue.add(placeBidData);
   }
 }

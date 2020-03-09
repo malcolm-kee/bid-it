@@ -3,24 +3,31 @@ import {
   Body,
   Controller,
   Get,
-  Inject,
+  // Inject,
   Logger,
   Param,
   Post,
   Put,
   Res,
 } from '@nestjs/common';
-import { ClientProxy, EventPattern } from '@nestjs/microservices';
+import {
+  // ClientProxy,
+  Ctx,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 import { Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import { AcceptBidDto, CreateDealDto, PostBidDto } from './deal.dto';
-import { BID_QUEUE } from './deal.type';
+// import { BID_QUEUE } from './deal.type';
+import { DealService } from './deal.service';
 
 @Controller('deal')
 export class DealController {
   constructor(
     private readonly dealService: DealDataService,
-    @Inject(BID_QUEUE) private readonly client: ClientProxy
+    private readonly helperService: DealService // @Inject(BID_QUEUE) private readonly client: ClientProxy
   ) {}
 
   @Get()
@@ -47,14 +54,13 @@ export class DealController {
   @Put()
   async postBid(@Body() assignDealBidDto: PostBidDto) {
     const bidId = uuid();
-    const payload = {
+
+    await this.helperService.placeBid({
       bidId,
       dealId: assignDealBidDto.dealId,
       dealerId: assignDealBidDto.dealerId,
       price: assignDealBidDto.price,
-    };
-
-    this.client.emit('place_bid', payload);
+    });
 
     return {
       message: 'Posted',
@@ -62,8 +68,12 @@ export class DealController {
     };
   }
 
-  @EventPattern('bid_accepted')
-  async updateDealBid(data: AcceptBidDto) {
+  @MessagePattern('bid_accepted')
+  async updateDealBid(
+    @Payload() data: AcceptBidDto,
+    @Ctx() context: RmqContext
+  ) {
+    Logger.log(`Detected new accepted bid`);
     const deal = await this.dealService.getOne(data.dealId);
 
     if (!deal) {
@@ -71,5 +81,10 @@ export class DealController {
     } else {
       await this.dealService.updateDealBid(data);
     }
+
+    const channel = context.getChannelRef();
+    const message = context.getMesssage();
+
+    channel.ack(message);
   }
 }

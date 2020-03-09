@@ -29,3 +29,10 @@ export interface AcceptBidData {
   readonly dealerId: string;
   readonly price: number;
 }
+
+export interface PlaceBidData {
+  readonly bidId: string;
+  readonly dealId: string;
+  readonly dealerId: string;
+  readonly price: number;
+}

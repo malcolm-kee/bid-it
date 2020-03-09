@@ -11,6 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:rest": "nest start bid-it --watch",
+    "start:engine": "nest start bid-engine --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -21,6 +22,7 @@
     "test:e2e": "jest --config ./apps/bid-it/test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs/bull": "^0.0.3",
     "@nestjs/common": "^6.10.14",
     "@nestjs/config": "^0.2.4",
     "@nestjs/core": "^6.10.14",
@@ -31,6 +33,7 @@
     "@nestjs/swagger": "^4.3.2",
     "amqp-connection-manager": "^3.2.0",
     "amqplib": "^0.5.5",
+    "bull": "^3.13.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.0",
     "mongoose": "^5.9.3",
@@ -45,6 +48,7 @@
     "@nestjs/cli": "^6.13.2",
     "@nestjs/schematics": "^6.8.1",
     "@nestjs/testing": "^6.10.14",
+    "@types/bull": "^3.12.1",
     "@types/express": "^4.17.2",
     "@types/jest": "25.1.2",
     "@types/mongoose": "^5.7.3",

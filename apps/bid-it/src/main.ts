@@ -1,9 +1,9 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { Transport } from '@nestjs/microservices';
-import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -16,8 +16,9 @@ async function bootstrap() {
       urls: [app.get(ConfigService).get<string>('BID_QUEUE_URL') as string],
       queue: 'bid_queue',
       noAck: false,
+      prefetchCount: 1,
       queueOptions: {
-        durable: true,
+        durable: false,
       },
     },
   });

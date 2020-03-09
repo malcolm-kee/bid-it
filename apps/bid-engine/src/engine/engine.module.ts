@@ -3,9 +3,8 @@ import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
-import { DealController } from './deal.controller';
-import { DealService } from './deal.service';
-import { BID_QUEUE } from './deal.type';
+import { EngineController } from './engine.controller';
+import { BID_QUEUE } from './engine.type';
 
 @Module({
   imports: [
@@ -14,7 +13,7 @@ import { BID_QUEUE } from './deal.type';
     }),
     DealDataModule,
   ],
-  controllers: [DealController],
+  controllers: [EngineController],
   providers: [
     {
       provide: BID_QUEUE,
@@ -27,8 +26,8 @@ import { BID_QUEUE } from './deal.type';
           options: {
             urls: [BID_QUEUE_URL],
             queue: 'bid_queue',
-            noAck: false,
             prefetchCount: 1,
+            noAck: false,
             queueOptions: {
               durable: false,
             },
@@ -37,7 +36,6 @@ import { BID_QUEUE } from './deal.type';
       },
       inject: [ConfigService],
     },
-    DealService,
   ],
 })
-export class DealModule {}
+export class EngineModule {}
