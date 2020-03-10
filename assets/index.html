@@ -7,7 +7,9 @@
   </head>
   <body>
     <script>
-      const socket = new WebSocket('ws://localhost:8080?bidId=1234');
+      const socket = new WebSocket(
+        'ws://localhost:8080?dealId=5e67576acc7ea72eb800c928'
+      );
 
       socket.onopen = function onOpen() {
         console.log('socket is opened');

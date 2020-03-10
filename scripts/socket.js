@@ -1,5 +1,38 @@
 const url = require('url');
 const WebSocket = require('ws');
+const redis = require('redis');
+
+const redisClient = redis.createClient();
+
+redisClient
+  .on('connect', () => console.log('redis client connected'))
+  .on('error', err => {
+    console.error('error on redis client');
+    console.error(err);
+  });
+
+redisClient.on('message', (channel, message) => {
+  const data = JSON.parse(message);
+
+  if (data) {
+    const clients = bidClients.get(data.dealId);
+    if (clients) {
+      const dataToClient = JSON.stringify({
+        type: channel,
+        payload: data,
+      });
+      clients.forEach(client => {
+        client.send(dataToClient);
+      });
+    }
+  }
+});
+
+redisClient.subscribe(['bid_accepted', 'bid_rejected'], err => {
+  if (err) {
+    console.error(err);
+  }
+});
 
 const wss = new WebSocket.Server({
   port: 8080,
@@ -10,8 +43,8 @@ const bidClients = new Map();
 function keepAlive() {
   this.isAlive = true;
 }
-function registerClient(bidId, client) {
-  const currentClients = bidClients.get(bidId);
+function registerClient(dealId, client) {
+  const currentClients = bidClients.get(dealId);
 
   client.isAlive = true;
   client.on('pong', keepAlive);
@@ -19,15 +52,15 @@ function registerClient(bidId, client) {
   if (currentClients) {
     currentClients.push(client);
   } else {
-    bidClients.set(bidId, [client]);
+    bidClients.set(dealId, [client]);
   }
 }
 
 wss.on('connection', (ws, req) => {
   const { query } = url.parse(req.url, true);
 
-  if (query && query.bidId) {
-    registerClient(query.bidId, ws);
+  if (query && query.dealId) {
+    registerClient(query.dealId, ws);
   }
 
   ws.on('message', message => {
@@ -40,13 +73,15 @@ const intervalId = setInterval(() => {
   bidClients.forEach((clients, key) => {
     clients.forEach(client => {
       if (!client.isAlive) {
-        clients.splice(clients.indexOf(client), 1);
+        if (clients.length === 1) {
+          bidClients.delete(key);
+        } else {
+          clients.splice(clients.indexOf(client), 1);
+        }
         client.terminate();
       } else {
         client.isAlive = false;
         client.ping(noop);
-
-        client.send(`Now is ${new Date().toLocaleString()} for [${key}]`);
       }
     });
   });
