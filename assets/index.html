@@ -4,21 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
+    <div>
+      <output>
+        <ul id="events"></ul>
+      </output>
+      <form id="subscribeForm">
+        <div>
+          <label for="dealId">Deal Id</label>
+          <input id="dealId" required />
+        </div>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
     <script>
-      const socket = new WebSocket(
-        'ws://localhost:8080?dealId=5e67576acc7ea72eb800c928'
-      );
+      (function initApp() {
+        function subscribeDealUpdates(dealId, { onMessage } = {}) {
+          const socket = new WebSocket('ws://localhost:8080?dealId=' + dealId);
 
-      socket.onopen = function onOpen() {
-        console.log('socket is opened');
-        socket.send('Hello Whart!!!');
-      };
+          socket.onopen = function onOpen() {
+            console.log('socket is opened');
+          };
 
-      socket.onmessage = function onMessage(ev) {
-        console.log(ev.data);
-      };
+          socket.onmessage = function onMessage(ev) {
+            onMessage(JSON.parse(ev.data));
+          };
+        }
+
+        $('#subscribeForm').on('submit', function(ev) {
+          ev.preventDefault();
+          subscribeDealUpdates($('#dealId').val(), {
+            onMessage: function(message) {
+              $('#events').append(`<li>${message}</li>`);
+            },
+          });
+        });
+      })();
     </script>
   </body>
 </html>
