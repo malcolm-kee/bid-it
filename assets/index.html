@@ -4,25 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"
-    ></script>
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <div>
+  <body class="bg-gray-200">
+    <div class="max-w-md mx-auto bg-white my-6 p-3">
       <output>
         <ul id="events"></ul>
       </output>
       <form id="subscribeForm">
         <div>
-          <label for="dealId">Deal Id</label>
-          <input id="dealId" required />
+          <label class="block" for="dealId">Deals</label>
+          <select id="dealId" class="shadow-inner w-full" required>
+            <option value=""></option>
+          </select>
         </div>
-        <button type="submit">Subscribe</button>
+        <div class="py-2">
+          <button
+            class="bg-teal-600 text-gray-100 w-full shadow-lg rounded"
+            type="submit"
+          >
+            Subscribe
+          </button>
+        </div>
       </form>
     </div>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
     <script>
       (function initApp() {
         function subscribeDealUpdates(dealId, { onMessage } = {}) {
@@ -32,19 +45,33 @@
             console.log('socket is opened');
           };
 
+          socket.onerror = function onError(ev) {
+            console.log('Socket error');
+            console.error(ev);
+          };
+
           socket.onmessage = function onMessageHandler(ev) {
             if (ev) {
-              console.log('data', ev.data);
               onMessage(ev.data && JSON.parse(ev.data));
             }
           };
         }
 
+        $.ajax('http://localhost:3000/deal', {
+          success: function(deals) {
+            $.each(deals, function(index, deal) {
+              $('#dealId').append(
+                `<option value="${deal._id}">${deal.name}</option>`
+              );
+            });
+          },
+        });
+
         $('#subscribeForm').on('submit', function(ev) {
           ev.preventDefault();
+          $('#events').append(`<li>Listening for updates...</li>`);
           subscribeDealUpdates($('#dealId').val(), {
             onMessage: function(message) {
-              console.log({ message });
               if (message) {
                 const { type, payload } = message;
                 $('#events').append(
