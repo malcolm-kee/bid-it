@@ -4,6 +4,35 @@
 - Bid Engine
 - WebSocket
 
+## Installation
+
+### Prerequisite
+
+1. MongoDB
+1. Redis
+
+### Running The Services
+
+1. Install dependencies.
+
+   ```bash
+   yarn install
+   ```
+
+1. Adding an `.env` file at the root of the project with the following content:
+
+   ```bash
+   DEALS_DB_URL=mongodb://localhost:27017/deal
+   USERS_DB_URL=mongodb://localhost:27017/user
+   REDIS_URL=redis://localhost:6379
+   ```
+
+1. Start all the services.
+
+   ```bash
+   yarn start
+   ```
+
 ## Architecture
 
 ![Architecture](assets/bid-it-architecture.png)
