@@ -57,8 +57,9 @@ function listenForBid() {
       deal &&
       deal.startedAt < now &&
       deal.closedAt > now &&
-      (!(deal.currentBid && deal.currentBid.currentPrice) ||
-        deal.currentBid.currentPrice < data.price)
+      data.price >
+        ((deal.currentBid && deal.currentBid.currentPrice) ||
+          deal.startingPrice)
     ) {
       await publishEvent('bid_accepted', data);
     } else {

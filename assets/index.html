@@ -32,8 +32,11 @@
             console.log('socket is opened');
           };
 
-          socket.onmessage = function onMessage(ev) {
-            onMessage(JSON.parse(ev.data));
+          socket.onmessage = function onMessageHandler(ev) {
+            if (ev) {
+              console.log('data', ev.data);
+              onMessage(ev.data && JSON.parse(ev.data));
+            }
           };
         }
 
@@ -41,7 +44,13 @@
           ev.preventDefault();
           subscribeDealUpdates($('#dealId').val(), {
             onMessage: function(message) {
-              $('#events').append(`<li>${message}</li>`);
+              console.log({ message });
+              if (message) {
+                const { type, payload } = message;
+                $('#events').append(
+                  `<li>[${type}]: ${JSON.stringify(payload)}</li>`
+                );
+              }
             },
           });
         });
