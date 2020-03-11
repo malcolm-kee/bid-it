@@ -30,7 +30,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  const port = app.get(ConfigService).get('PORT') || 3000;
+
+  await app.listen(port, () =>
+    console.log(`Bid It Rest API started at port ${port}`)
+  );
 }
 
 bootstrap();
