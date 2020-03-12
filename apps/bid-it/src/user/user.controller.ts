@@ -38,6 +38,6 @@ export class UserController {
       });
     }
 
-    return user;
+    return response.json(user);
   }
 }
