@@ -12,12 +12,27 @@ Scaleable Bidding System With Microservices Architecture
 
 ## Installation
 
-### Prerequisite
+There are two ways to run this application:
+
+1. Docker
+2. Manual
+
+### 1. Docker
+
+```bash
+docker-compose up
+```
+
+You can access the REST API Swagger UI at http://localhost:3000/api
+
+### 2. Manual
+
+#### Prerequisite
 
 1. MongoDB
 1. Redis
 
-### Running The Services
+#### Running The Services
 
 1. Install dependencies.
 
@@ -53,6 +68,9 @@ The reports then can be generated with [`generate-report.js`](scripts/generate-r
 1. Start all the services:
 
    ```bash
+   # if you install with Docker
+   docker-compose up
+   # if you install manually
    yarn start
    ```
 
@@ -73,6 +91,22 @@ The reports then can be generated with [`generate-report.js`](scripts/generate-r
    ```bash
    yarn report
    ```
+
+   If you use Docker, you need to get the Port Number of MongoDB container with something like this:
+
+   ```bash
+   docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' bid-it_db_1
+   ```
+
+   where `bid-it_db_1` may be different. Use `docker ps` to get the container name.
+
+   Then you can generate the report by passing the `DB_HOST` parameter:
+
+   ```bash
+   DB_HOST=172.18.0.3 yarn report
+   ```
+
+   where `172.18.0.3` is the result of the `docker inspect` command.
 
 ## Additional Considerations/Improvements
 
