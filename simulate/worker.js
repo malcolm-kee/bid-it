@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fetch = require('node-fetch');
 const WebSocket = require('ws');
+const { v4 } = require('uuid');
 
 const port = process.env.PORT || 3000;
 const restBaseUrl = `http://localhost:${port}`;
@@ -31,7 +32,7 @@ function getFakeUser() {
   const pid = process.pid;
   const loginDetails = {
     name: `Malcolm ${pid}`,
-    email: `m.${pid}@gmail.com`,
+    email: `m.${v4()}@gmail.com`,
   };
 
   return fetchJson('/register', {
@@ -93,10 +94,14 @@ async function placeRandomBid(user, deal) {
 }
 
 (async function main() {
-  const [user, activeDeals] = await Promise.all([
-    getFakeUser(),
-    getActiveDeals(),
-  ]);
+  try {
+    const [user, activeDeals] = await Promise.all([
+      getFakeUser(),
+      getActiveDeals(),
+    ]);
 
-  await placeRandomBid(user, getRandomItem(activeDeals));
+    await placeRandomBid(user, getRandomItem(activeDeals));
+  } catch (mainError) {
+    console.error(mainError);
+  }
 })();
