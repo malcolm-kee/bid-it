@@ -11,6 +11,9 @@ import { BID_QUEUE, EVENT_SERVICE } from './deal.type';
   imports: [
     BullModule.registerQueue({
       name: BID_QUEUE,
+      redis: {
+        host: process.env.REDIS_HOST,
+      },
     }),
     DealDataModule,
   ],
