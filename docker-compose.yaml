@@ -13,7 +13,7 @@ services:
       DEALS_DB_URL: mongodb://db:27017/deal
       USERS_DB_URL: mongodb://db:27017/user
       REDIS_URL: redis://msg:6379
-      REDIS_HOST: redis://msg
+      REDIS_HOST: msg
   engine:
     build:
       context: .
@@ -24,7 +24,7 @@ services:
     environment:
       DEALS_DB_URL: mongodb://db:27017/deal
       REDIS_URL: redis://msg:6379
-      REDIS_HOST: redis://msg
+      REDIS_HOST: msg
   socket:
     build:
       context: .
