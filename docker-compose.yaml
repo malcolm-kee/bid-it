@@ -1,0 +1,39 @@
+version: '3'
+services:
+  rest:
+    build:
+      context: .
+      dockerfile: docker-config/rest.Dockerfile
+    ports:
+      - '3000:3000'
+    links:
+      - db
+      - msg
+    environment:
+      DEALS_DB_URL: mongodb://db:27017/deal
+      USERS_DB_URL: mongodb://db:27017/user
+      REDIS_URL: redis://msg:6379
+  engine:
+    build:
+      context: .
+      dockerfile: docker-config/engine.Dockerfile
+    links:
+      - db
+      - msg
+    environment:
+      DEALS_DB_URL: mongodb://db:27017/deal
+      REDIS_URL: redis://msg:6379
+  socket:
+    build:
+      context: .
+      dockerfile: docker-config/socket.Dockerfile
+    ports:
+      - '8080:8080'
+    links:
+      - msg
+    environment:
+      REDIS_URL: redis://msg:6379
+  db:
+    image: mongo:3
+  msg:
+    image: redis:4.0-alpine

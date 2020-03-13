@@ -12,4 +12,4 @@ RUN yarn
 
 COPY --chown=node:node . .
 
-CMD ["node", "scripts/engine.js"]
+CMD ["node", "scripts/socket.js"]
