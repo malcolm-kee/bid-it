@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const mongodb = require('mongodb');
 
-mongodb.MongoClient.connect('mongodb://localhost:27017').then(client => {
+const dbHost = process.env.DB_HOST || 'localhost';
+
+mongodb.MongoClient.connect(`mongodb://${dbHost}:27017`).then(client => {
   const bidsCollection = client.db('report').collection('bids');
   const dealCollection = client.db('deal').collection('deals');
 
