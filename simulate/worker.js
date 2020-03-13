@@ -6,8 +6,8 @@ const WebSocket = require('ws');
 const port = process.env.PORT || 3000;
 const restBaseUrl = `http://localhost:${port}`;
 const wsBaseUrl = `ws://localhost:8080`;
+
 const INCREMENTS = [100, 300, 500];
-const TASK_DELAYS = [500, 800, 1000];
 const TOTAL_BIDS = 20;
 
 function getActiveDeals() {
@@ -33,8 +33,6 @@ function placeBid(data) {
 }
 
 const getRandomItem = array => array[Math.floor(Math.random() * array.length)];
-const wait = delayInMs =>
-  new Promise(fulfill => setTimeout(fulfill, delayInMs));
 
 function listenSocket(dealId, onNewPrice) {
   return new Promise((fulfill, reject) => {
@@ -63,42 +61,23 @@ async function placeRandomBid(deal) {
     currentPrice = newPrice;
   });
 
-  const delays = [];
-  for (let index = 0; index < TOTAL_BIDS; index++) {
-    delays.push(getRandomItem(TASK_DELAYS));
-  }
-
-  try {
-    for (const delay of delays) {
-      await wait(delay);
-      currentPrice = currentPrice + getRandomItem(INCREMENTS);
-
+  for (let i = 0; i < TOTAL_BIDS; i++) {
+    currentPrice = currentPrice + getRandomItem(INCREMENTS);
+    try {
       await placeBid({
         dealId: deal._id,
         price: currentPrice,
       });
+    } catch (err) {
+      console.error(err);
     }
-
-    cleanupWs();
-  } catch (err) {
-    console.error(err);
   }
+
+  cleanupWs();
 }
 
-async function getRandomDeal() {
-  try {
-    const activeDeals = await getActiveDeals();
+(async function main() {
+  const activeDeals = await getActiveDeals();
 
-    return getRandomItem(activeDeals);
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-async function main() {
-  const deal = await getRandomDeal();
-
-  await placeRandomBid(deal);
-}
-
-main();
+  await placeRandomBid(getRandomItem(activeDeals));
+})();

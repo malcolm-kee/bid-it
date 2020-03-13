@@ -4,9 +4,9 @@ const path = require('path');
 
 function runWorker() {
   return new Promise(fulfill => {
-    const child = spawn('node', [path.resolve(__dirname, 'worker.js')]);
+    const childPs = spawn('node', [path.resolve(__dirname, 'worker.js')]);
 
-    child.on('close', code => {
+    childPs.on('close', code => {
       fulfill(code);
     });
   });
@@ -14,7 +14,7 @@ function runWorker() {
 
 const WORKER_COUNT = 100;
 
-function main() {
+(function main() {
   const works = [];
 
   for (let index = 0; index < WORKER_COUNT; index++) {
@@ -22,6 +22,4 @@ function main() {
   }
 
   return Promise.allSettled(works);
-}
-
-main();
+})();
