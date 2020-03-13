@@ -9,18 +9,21 @@ import { BID_QUEUE, EVENT_SERVICE } from './deal.type';
 @Injectable()
 export class DealService {
   constructor(
-    private readonly dealService: DealDataService,
+    private readonly dealDataService: DealDataService,
     @Inject(EVENT_SERVICE) private readonly client: ClientProxy,
     @InjectQueue(BID_QUEUE) private readonly bidQueue: Queue
   ) {}
 
   @Interval(1000)
   async closeDealAndAnnounce() {
-    const deals = await this.dealService.getPendingClosedDeals();
+    const deals = await this.dealDataService.getPendingClosedDeals();
 
     for (const deal of deals) {
-      await this.dealService.closeDeal(deal.id);
-      this.client.emit('bid_closed', deal.toJSON());
+      await this.dealDataService.closeDeal(deal.id);
+      this.client.emit('bid_closed', {
+        dealId: deal.id,
+        details: deal.toJSON(),
+      });
       Logger.log(`closed deal`);
       Logger.log(deal);
     }

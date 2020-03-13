@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const url = require('url');
 const WebSocket = require('ws');
 const redis = require('redis');
 
+const bidClients = new Map();
 const redisClient = redis.createClient();
 
 redisClient
@@ -28,7 +30,7 @@ redisClient.on('message', (channel, message) => {
   }
 });
 
-redisClient.subscribe(['bid_accepted', 'bid_rejected'], err => {
+redisClient.subscribe(['bid_accepted', 'bid_rejected', 'bid_closed'], err => {
   if (err) {
     console.error(err);
   }
@@ -37,8 +39,6 @@ redisClient.subscribe(['bid_accepted', 'bid_rejected'], err => {
 const wss = new WebSocket.Server({
   port: 8080,
 });
-
-const bidClients = new Map();
 
 function keepAlive() {
   this.isAlive = true;
@@ -68,6 +68,7 @@ wss.on('connection', (ws, req) => {
   });
 });
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 function noop() {}
 const intervalId = setInterval(() => {
   bidClients.forEach((clients, key) => {
