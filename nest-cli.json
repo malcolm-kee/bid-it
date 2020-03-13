@@ -17,15 +17,6 @@
         "tsConfigPath": "apps/bid-it/tsconfig.app.json"
       }
     },
-    "bid-engine": {
-      "type": "application",
-      "root": "apps/bid-engine",
-      "entryFile": "main",
-      "sourceRoot": "apps/bid-engine/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/bid-engine/tsconfig.app.json"
-      }
-    },
     "deal-data": {
       "type": "library",
       "root": "libs/deal-data",
