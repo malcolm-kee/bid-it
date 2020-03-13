@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fetch = require('node-fetch');
-const { v4: uuid } = require('uuid');
 const WebSocket = require('ws');
 
 const port = process.env.PORT || 3000;
@@ -14,22 +13,38 @@ function getActiveDeals() {
   return fetch(`${restBaseUrl}/deal`).then(res => res.json());
 }
 
-function placeBid(data) {
-  const formData = Object.assign(
-    {},
-    {
-      dealerId: uuid(),
-    },
-    data
-  );
-
-  return fetch(`${restBaseUrl}/deal`, {
-    method: 'PUT',
-    body: JSON.stringify(formData),
+function fetchJson(url, options) {
+  return fetch(`${restBaseUrl}${url}`, {
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then(res => res.json());
+    ...options,
+  }).then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    throw new Error('Fetch fail');
+  });
+}
+
+function getFakeUser() {
+  const pid = process.pid;
+  const loginDetails = {
+    name: `Malcolm ${pid}`,
+    email: `m.${pid}@gmail.com`,
+  };
+
+  return fetchJson('/register', {
+    method: 'POST',
+    body: JSON.stringify(loginDetails),
+  });
+}
+
+function placeBid(data) {
+  return fetchJson('/deal', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
 }
 
 const getRandomItem = array => array[Math.floor(Math.random() * array.length)];
@@ -52,7 +67,7 @@ function listenSocket(dealId, onNewPrice) {
   });
 }
 
-async function placeRandomBid(deal) {
+async function placeRandomBid(user, deal) {
   let currentPrice = deal.currentBid
     ? deal.currentBid.currentPrice
     : deal.startingPrice;
@@ -66,6 +81,7 @@ async function placeRandomBid(deal) {
     try {
       await placeBid({
         dealId: deal._id,
+        dealerId: user._id,
         price: currentPrice,
       });
     } catch (err) {
@@ -77,7 +93,10 @@ async function placeRandomBid(deal) {
 }
 
 (async function main() {
-  const activeDeals = await getActiveDeals();
+  const [user, activeDeals] = await Promise.all([
+    getFakeUser(),
+    getActiveDeals(),
+  ]);
 
-  await placeRandomBid(getRandomItem(activeDeals));
+  await placeRandomBid(user, getRandomItem(activeDeals));
 })();
