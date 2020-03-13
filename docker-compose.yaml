@@ -35,6 +35,16 @@ services:
       - msg
     environment:
       REDIS_URL: redis://msg:6379
+  reporting:
+    build:
+      context: .
+      dockerfile: : docker-config/reporting.Dockerfile
+    links:
+      - db
+      - msg
+    environment:
+      REDIS_URL: redis://msg:6379
+      REPORTING_DB_URL: mongodb://db:27017/report
   db:
     image: mongo:3
   msg:
