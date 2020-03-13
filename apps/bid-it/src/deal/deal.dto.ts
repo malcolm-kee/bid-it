@@ -47,7 +47,6 @@ export class PostBidDto {
   @ApiProperty({
     description: 'Id for the user that place the bid',
   })
-  @IsMongoId()
   readonly dealerId: string;
 
   @ApiProperty({
