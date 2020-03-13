@@ -25,7 +25,11 @@ const DealDataSchema = new mongoose.Schema(
 );
 
 const DealData = mongoose.model('deal', DealDataSchema, 'deals');
-const bidQueue = new Queue('BID_QUEUE');
+const bidQueue = new Queue('BID_QUEUE', {
+  redis: {
+    host: process.env.REDIS_HOST,
+  },
+});
 const redisClient = redis.createClient(process.env.REDIS_URL);
 
 redisClient

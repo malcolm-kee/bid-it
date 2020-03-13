@@ -24,6 +24,7 @@ services:
     environment:
       DEALS_DB_URL: mongodb://db:27017/deal
       REDIS_URL: redis://msg:6379
+      REDIS_HOST: redis://msg
   socket:
     build:
       context: .
