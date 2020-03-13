@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+require('dotenv').config();
 const Queue = require('bull');
 const mongoose = require('mongoose');
 const redis = require('redis');
@@ -25,7 +26,7 @@ const DealDataSchema = new mongoose.Schema(
 
 const DealData = mongoose.model('deal', DealDataSchema, 'deals');
 const bidQueue = new Queue('BID_QUEUE');
-const redisClient = redis.createClient();
+const redisClient = redis.createClient(process.env.REDIS_URL);
 
 redisClient
   .on('connect', () => {
@@ -73,16 +74,22 @@ function listenForBid() {
 
 function gracefulShutdown() {
   console.log(`Process ${process.pid} is shutting down...`);
-  mongoose.disconnect().then(() => {
-    redisClient.quit(() => {
-      process.exit(0);
-    });
-  });
+
+  Promise.allSettled([
+    new Promise(fulfill => {
+      redisClient.quit(() => {
+        fulfill();
+      });
+    }),
+    new Promise(fulfill => {
+      mongoose.disconnect(() => fulfill());
+    }),
+  ]).finally(() => process.exit(0));
 }
 
 function startup() {
   mongoose
-    .connect('mongodb://localhost:27017/deal')
+    .connect(process.env.DEALS_DB_URL)
     .then(() => {
       console.log('Connected to DB');
       listenForBid();

@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+require('dotenv').config();
 const url = require('url');
 const WebSocket = require('ws');
 const redis = require('redis');
 
 const bidClients = new Map();
-const redisClient = redis.createClient();
+const redisClient = redis.createClient(process.env.REDIS_URL);
 
 redisClient
   .on('connect', () => console.log('redis client connected'))
@@ -91,3 +92,22 @@ const intervalId = setInterval(() => {
 wss.on('close', () => {
   clearInterval(intervalId);
 });
+
+function gracefulShutdown() {
+  console.log(`Process ${process.pid} is shutting down...`);
+
+  Promise.allSettled([
+    new Promise(fulfill => {
+      redisClient.quit(() => {
+        fulfill();
+      });
+    }),
+    new Promise(fulfill => {
+      wss.close(() => fulfill());
+    }),
+  ]).finally(() => process.exit(0));
+}
+
+process.on('SIGTERM', gracefulShutdown);
+
+process.on('SIGINT', gracefulShutdown);
