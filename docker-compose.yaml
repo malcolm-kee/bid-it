@@ -38,7 +38,7 @@ services:
   reporting:
     build:
       context: .
-      dockerfile: : docker-config/reporting.Dockerfile
+      dockerfile: docker-config/reporting.Dockerfile
     links:
       - db
       - msg
