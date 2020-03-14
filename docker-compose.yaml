@@ -7,6 +7,8 @@ services:
     links:
       - db
       - msg
+    deploy:
+      replicas: 3
     environment:
       DEALS_DB_URL: mongodb://db:27017/deal
       USERS_DB_URL: mongodb://db:27017/user
@@ -27,10 +29,10 @@ services:
     build:
       context: .
       dockerfile: docker-config/socket.Dockerfile
-    ports:
-      - '8080:8080'
     links:
       - msg
+    deploy:
+      replicas: 3
     environment:
       REDIS_URL: redis://msg:6379
   reporting:
@@ -51,6 +53,7 @@ services:
       - rest
     ports:
       - '3000:3000'
+      - '8080:8080'
   db:
     image: mongo:3
   msg:

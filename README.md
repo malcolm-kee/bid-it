@@ -20,10 +20,14 @@ There are two ways to run this application:
 ### 1. Docker
 
 ```bash
-docker-compose up
+docker-compose --compatibility up -d
 ```
 
+This will starts 3 Rest API services with 3 WebSocket servers with Nginx as load-balancer in front them.
+
 You can access the REST API Swagger UI at http://localhost:3000/api
+
+> You can shutdown the services with the command `docker-compose down`
 
 ### 2. Manual
 
