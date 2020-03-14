@@ -96,21 +96,13 @@ The reports then can be generated with [`generate-report.js`](scripts/generate-r
    yarn report
    ```
 
-   If you use Docker, you need to get the Port Number of MongoDB container with something like this:
+   If you use Docker, you can generate the report with the following command:
 
    ```bash
-   docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' bid-it_db_1
+   DB_HOST="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' bid-it_db_1)" yarn report
    ```
 
-   where `bid-it_db_1` may be different. Use `docker ps` to get the container name.
-
-   Then you can generate the report by passing the `DB_HOST` parameter:
-
-   ```bash
-   DB_HOST=172.18.0.3 yarn report
-   ```
-
-   where `172.18.0.3` is the result of the `docker inspect` command.
+   due to the IP Address of the MongoDB container is randomly assigned by Docker instead of `localhost`.
 
 ## Additional Considerations/Improvements
 
