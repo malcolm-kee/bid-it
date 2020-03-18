@@ -69,12 +69,25 @@ The reports then can be generated with [`generate-report.js`](scripts/generate-r
 
 ## Simulations
 
+### With Docker in Unix environment
+
 1. Start all the services:
 
    ```bash
-   # if you install with Docker
-   docker-compose up
-   # if you install manually
+   docker-compose --compatibility up -d
+   ```
+
+1. Generate test data and simulate 200 concurrent clients performing bidding, and generates reporting in console.
+
+   ```bash
+   ./run-simulation.sh
+   ```
+
+### Others
+
+1. Start all the services:
+
+   ```bash
    yarn start
    ```
 
@@ -95,14 +108,6 @@ The reports then can be generated with [`generate-report.js`](scripts/generate-r
    ```bash
    yarn report
    ```
-
-   If you use Docker, you can generate the report with the following command:
-
-   ```bash
-   DB_HOST="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' bid-it_db_1)" yarn report
-   ```
-
-   due to the IP Address of the MongoDB container is randomly assigned by Docker instead of `localhost`.
 
 ## Additional Considerations/Improvements
 

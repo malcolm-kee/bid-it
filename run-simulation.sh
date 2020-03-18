@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e;
+
 result="$(curl -s http://localhost:3000/deal)";
 
 echo $result;
