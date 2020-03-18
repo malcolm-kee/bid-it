@@ -1,18 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {
-  AcceptBidData,
-  CreateDealData,
-  Deal,
-  DEAL_SCHEMA_NAME,
-} from './deal-data.type';
+import { AcceptBidData, CreateDealData, DealDocument, DEAL_SCHEMA_NAME } from './deal-data.type';
 
 @Injectable()
 export class DealDataService {
   constructor(
-    @InjectModel(DEAL_SCHEMA_NAME) private readonly dealModel: Model<Deal>
-  ) {}
+    @InjectModel(DEAL_SCHEMA_NAME) private readonly dealModel: Model<DealDocument>
+  ) { }
 
   create(createDealDto: CreateDealData) {
     return this.dealModel.create({

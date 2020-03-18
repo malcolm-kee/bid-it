@@ -12,7 +12,7 @@ export type DealData = {
   };
 };
 
-export interface Deal extends Document, DealData {}
+export interface DealDocument extends Document, DealData { }
 
 export const DEAL_SCHEMA_NAME = 'Deal';
 

@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
-import { Deal } from './deal-data.type';
+import { DealDocument } from './deal-data.type';
 
-export const DealDataSchema = new mongoose.Schema<Deal>(
+export const DealDataSchema = new mongoose.Schema<DealDocument>(
   {
     name: String,
     startingPrice: Number,

@@ -1,8 +1,10 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-require('dotenv').config();
-const Queue = require('bull');
-const mongoose = require('mongoose');
-const redis = require('redis');
+import type { DealDocument, PlaceBidData } from '@app/deal-data';
+import Queue from 'bull';
+import { config } from 'dotenv';
+import mongoose from 'mongoose';
+import redis from 'redis';
+
+config();
 
 const DealDataSchema = new mongoose.Schema(
   {
@@ -24,13 +26,13 @@ const DealDataSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const DealData = mongoose.model('deal', DealDataSchema, 'deals');
-const bidQueue = new Queue('BID_QUEUE', {
+const DealData = mongoose.model<DealDocument>('deal', DealDataSchema, 'deals');
+const bidQueue = new Queue<PlaceBidData>('BID_QUEUE', {
   redis: {
     host: process.env.REDIS_HOST,
   },
 });
-const redisClient = redis.createClient(process.env.REDIS_URL);
+const redisClient = redis.createClient(process.env.REDIS_URL as string);
 
 redisClient
   .on('connect', () => {
@@ -41,7 +43,7 @@ redisClient
     console.error(err);
   });
 
-function publishEvent(key, value) {
+function publishEvent(key: string, value) {
   return new Promise((fulfill, reject) => {
     redisClient.publish(key, JSON.stringify(value), err => {
       if (err) {
@@ -63,8 +65,8 @@ function listenForBid() {
       deal.startedAt < now &&
       deal.closedAt > now &&
       data.price >
-        ((deal.currentBid && deal.currentBid.currentPrice) ||
-          deal.startingPrice)
+      ((deal.currentBid && deal.currentBid.currentPrice) ||
+        deal.startingPrice)
     ) {
       await publishEvent('bid_accepted', data);
     } else {
@@ -79,7 +81,7 @@ function listenForBid() {
 function gracefulShutdown() {
   console.log(`Process ${process.pid} is shutting down...`);
 
-  Promise.allSettled([
+  Promise.all([
     new Promise(fulfill => {
       redisClient.quit(() => {
         fulfill();
@@ -93,7 +95,7 @@ function gracefulShutdown() {
 
 function startup() {
   mongoose
-    .connect(process.env.DEALS_DB_URL)
+    .connect(process.env.DEALS_DB_URL as string)
     .then(() => {
       console.log('Connected to DB');
       listenForBid();
