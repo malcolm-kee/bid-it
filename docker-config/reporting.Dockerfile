@@ -12,4 +12,6 @@ RUN yarn
 
 COPY --chown=node:node . .
 
-CMD ["node", "scripts/reporting.js"]
+RUN yarn build:scripts
+
+CMD ["node", "dist/scripts/reporting.js"]
