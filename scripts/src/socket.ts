@@ -1,12 +1,12 @@
-import type { PlaceBidData } from '@app/deal-data';
+import { PlaceBidData } from '@app/deal-data';
 import { config } from 'dotenv';
 import redis from 'redis';
 import url from 'url';
 import WebSocket from 'ws';
 
 type WebSocketWithHeartBeat = WebSocket & {
-  isAlive: boolean
-}
+  isAlive: boolean;
+};
 
 config();
 
@@ -78,7 +78,7 @@ wss.on('connection', (ws: WebSocketWithHeartBeat, req) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-function noop() { }
+function noop() {}
 const intervalId = setInterval(() => {
   bidClients.forEach((clients, key) => {
     clients.forEach(client => {

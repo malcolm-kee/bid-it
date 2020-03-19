@@ -1,6 +1,7 @@
 const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const tsConfigPath = path.resolve(__dirname, 'tsconfig.scripts.json');
 
@@ -41,6 +42,11 @@ module.exports = {
       }),
     ],
   },
+  plugins: [
+    new ForkTsCheckerWebpackPlugin({
+      tsconfig: tsConfigPath,
+    }),
+  ],
   optimization: {
     minimize: false,
   },

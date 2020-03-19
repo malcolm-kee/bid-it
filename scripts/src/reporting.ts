@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import mongoose from 'mongoose';
 import redis from 'redis';
-import type { AcceptedBidDocument } from './type'
+import { AcceptedBidDocument } from './type';
 
 config();
 
@@ -21,7 +21,11 @@ const AcceptedBidSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const AcceptedBidData = mongoose.model<AcceptedBidDocument>('bid', AcceptedBidSchema, 'bids');
+const AcceptedBidData = mongoose.model<AcceptedBidDocument>(
+  'bid',
+  AcceptedBidSchema,
+  'bids'
+);
 const redisClient = redis.createClient(redisUrl);
 
 redisClient

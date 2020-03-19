@@ -1,12 +1,14 @@
-import type { DealData } from '@app/deal-data'
+import { DealData } from '@app/deal-data';
 import mongodb from 'mongodb';
-import type { AcceptedBid } from './type';
+import { AcceptedBid } from './type';
 
 const dbHost = process.env.DB_HOST || 'localhost';
 
 mongodb.MongoClient.connect(`mongodb://${dbHost}:27017`).then(client => {
   const bidsCollection = client.db('report').collection<AcceptedBid>('bids');
-  const dealCollection = client.db('deal').collection<DealData & { _id: string }>('deals');
+  const dealCollection = client
+    .db('deal')
+    .collection<DealData & { _id: string }>('deals');
 
   bidsCollection
     .find({ type: 'bid_accepted' })

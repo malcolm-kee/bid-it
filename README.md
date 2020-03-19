@@ -23,7 +23,7 @@ There are two ways to run this application:
 docker-compose --compatibility up -d
 ```
 
-This will starts 3 Rest API services with 3 WebSocket servers with Nginx as load-balancer in front them.
+This will starts 3 Rest API services with 3 WebSocket servers with Nginx as load-balancer in front of them.
 
 You can access the REST API Swagger UI at http://localhost:3000/api
 
@@ -114,7 +114,7 @@ The reports then can be generated with [`generate-report.ts`](scripts/scr/genera
 ### Scaleability
 
 1. Both REST API and Websocket servers can be scaled horizontally easily.
-1. At the moment, a single queue is used to process all bids. This singleton design is intentional to avoid race conditions between bids. 
+1. At the moment, a single queue is used to process all bids. This singleton design is intentional to avoid race conditions between bids.
 1. The singleton design of queue may have performance impact if the load is very high. One possible solution to explore is to distribute the load to process bids across multiple queues by ensuring bids associated with a particular deal always go to the same queue.
 
 ## Built With

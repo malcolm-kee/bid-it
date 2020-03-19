@@ -1,4 +1,4 @@
-import type { DealDocument, PlaceBidData } from '@app/deal-data';
+import { DealDocument, PlaceBidData } from '@app/deal-data';
 import Queue from 'bull';
 import { config } from 'dotenv';
 import mongoose from 'mongoose';
@@ -65,8 +65,8 @@ function listenForBid() {
       deal.startedAt < now &&
       deal.closedAt > now &&
       data.price >
-      ((deal.currentBid && deal.currentBid.currentPrice) ||
-        deal.startingPrice)
+        ((deal.currentBid && deal.currentBid.currentPrice) ||
+          deal.startingPrice)
     ) {
       await publishEvent('bid_accepted', data);
     } else {
