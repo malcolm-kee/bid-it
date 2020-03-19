@@ -47,7 +47,7 @@ const wss = new WebSocket.Server({
   port: 8080,
 });
 
-function keepAlive() {
+function keepAlive(this: WebSocketWithHeartBeat) {
   this.isAlive = true;
 }
 function registerClient(dealId: string, client: WebSocketWithHeartBeat) {

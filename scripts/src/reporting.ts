@@ -76,16 +76,3 @@ process.on('SIGINT', gracefulShutdown);
       gracefulShutdown();
     });
 })();
-
-/**
-// MongoDB Aggregate Report
-use report
-
- db.bids.aggregate(
-     [
-         { $match: {} },
-         { $group: { _id: { $dateToString: { format: "%H:%M:%S", date: "$createdAt" } }, count: { $sum: 1 } } },
-         { $sort: { _id: 1 } }
-     ]
- )
- */
