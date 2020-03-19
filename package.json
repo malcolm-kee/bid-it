@@ -9,7 +9,7 @@
     "build": "nest build && yarn build:scripts",
     "build:rest": "nest build",
     "build:scripts": "webpack --config scripts/webpack.config.js",
-    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\" \"scripts/**.{ts,js}\"",
     "prestart": "npm run build",
     "start": "concurrently \"npm:start:rest\" \"npm:start:engine\" \"npm:start:socket\" \"npm:start:reporting\"",
     "start:dev": "nest start --watch",
