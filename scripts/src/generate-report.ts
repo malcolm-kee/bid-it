@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const mongodb = require('mongodb');
+import type { DealData } from '@app/deal-data'
+import mongodb from 'mongodb';
+import type { AcceptedBid } from './type';
 
 const dbHost = process.env.DB_HOST || 'localhost';
 
 mongodb.MongoClient.connect(`mongodb://${dbHost}:27017`).then(client => {
-  const bidsCollection = client.db('report').collection('bids');
-  const dealCollection = client.db('deal').collection('deals');
+  const bidsCollection = client.db('report').collection<AcceptedBid>('bids');
+  const dealCollection = client.db('deal').collection<DealData & { _id: string }>('deals');
 
   bidsCollection
     .find({ type: 'bid_accepted' })
@@ -38,7 +39,7 @@ mongodb.MongoClient.connect(`mongodb://${dbHost}:27017`).then(client => {
     .then(result => {
       console.group(`===Performance===`);
       console.table(
-        result.map(record => ({
+        (result as any).map(record => ({
           time: record._id,
           count: record.count,
         }))

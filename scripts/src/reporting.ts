@@ -1,9 +1,12 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-require('dotenv').config();
-const mongoose = require('mongoose');
-const redis = require('redis');
+import { config } from 'dotenv';
+import mongoose from 'mongoose';
+import redis from 'redis';
+import type { AcceptedBidDocument } from './type'
 
-const reportingDbUrl = process.env.REPORTING_DB_URL;
+config();
+
+const reportingDbUrl = process.env.REPORTING_DB_URL as string;
+const redisUrl = process.env.REDIS_URL as string;
 
 const AcceptedBidSchema = new mongoose.Schema(
   {
@@ -18,8 +21,8 @@ const AcceptedBidSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const AcceptedBidData = mongoose.model('bid', AcceptedBidSchema, 'bids');
-const redisClient = redis.createClient(process.env.REDIS_URL);
+const AcceptedBidData = mongoose.model<AcceptedBidDocument>('bid', AcceptedBidSchema, 'bids');
+const redisClient = redis.createClient(redisUrl);
 
 redisClient
   .on('connect', () => console.log('redis client connected'))
@@ -45,7 +48,7 @@ redisClient.subscribe(['bid_accepted', 'bid_rejected'], err => {
 function gracefulShutdown() {
   console.log(`Process ${process.pid} is shutting down...`);
 
-  Promise.allSettled([
+  Promise.all([
     new Promise(fulfill => {
       redisClient.quit(() => {
         fulfill();
@@ -73,16 +76,3 @@ process.on('SIGINT', gracefulShutdown);
       gracefulShutdown();
     });
 })();
-
-/**
-// MongoDB Aggregate Report
-use report
-
- db.bids.aggregate(
-     [
-         { $match: {} },
-         { $group: { _id: { $dateToString: { format: "%H:%M:%S", date: "$createdAt" } }, count: { $sum: 1 } } },
-         { $sort: { _id: 1 } }
-     ]
- )
- */

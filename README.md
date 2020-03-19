@@ -7,14 +7,14 @@ Scaleable Bidding System With Microservices Architecture
 ![Architecture](assets/bid-it-architecture.png)
 
 1. REST API is a NestJS application. [Source code](apps/bid-it/src/main.ts)
-1. Bid Engine is a NodeJS script. [Source code](scripts/engine.js)
-1. Websocket server is a NodeJS script. [Source code](scripts/socket.js)
+1. Bid Engine is a NodeJS script. [Source code](scripts/src/engine.ts)
+1. Websocket server is a NodeJS script. [Source code](scripts/src/socket.ts)
 
 ## Installation
 
 There are two ways to run this application:
 
-1. Docker
+1. Docker (recommended)
 2. Manual
 
 ### 1. Docker
@@ -63,9 +63,9 @@ You can access the REST API Swagger UI at http://localhost:3000/api
 
 ## Reports
 
-We use a reporting server ([source](scripts/reporting.js)) listening to Redis event and persists the events to MongoDB.
+We use a reporting server ([source](scripts/scr/reporting.ts)) listening to Redis event and persists the events to MongoDB.
 
-The reports then can be generated with [`generate-report.js`](scripts/generate-report.js)
+The reports then can be generated with [`generate-report.ts`](scripts/scr/generate-report.ts)
 
 ## Simulations
 
@@ -114,4 +114,13 @@ The reports then can be generated with [`generate-report.js`](scripts/generate-r
 ### Scaleability
 
 1. Both REST API and Websocket servers can be scaled horizontally easily.
-1. We use a single queue to be processed by single bid engine. This is to avoid race conditions between bids.
+1. At the moment, a single queue is used to process all bids. This singleton design is intentional to avoid race conditions between bids. 
+1. The singleton design of queue may have performance impact if the load is very high. One possible solution to explore is to distribute the load to process bids across multiple queues by ensuring bids associated with a particular deal always go to the same queue.
+
+## Built With
+
+- [NestJS](https://nestjs.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [webpack](https://webpack.js.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [Redis](https://redis.io/)

@@ -1,11 +1,17 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-require('dotenv').config();
-const url = require('url');
-const WebSocket = require('ws');
-const redis = require('redis');
+import type { PlaceBidData } from '@app/deal-data';
+import { config } from 'dotenv';
+import redis from 'redis';
+import url from 'url';
+import WebSocket from 'ws';
 
-const bidClients = new Map();
-const redisClient = redis.createClient(process.env.REDIS_URL);
+type WebSocketWithHeartBeat = WebSocket & {
+  isAlive: boolean
+}
+
+config();
+
+const bidClients = new Map<string, WebSocketWithHeartBeat[]>();
+const redisClient = redis.createClient(process.env.REDIS_URL as string);
 
 redisClient
   .on('connect', () => console.log('redis client connected'))
@@ -15,7 +21,7 @@ redisClient
   });
 
 redisClient.on('message', (channel, message) => {
-  const data = JSON.parse(message);
+  const data: PlaceBidData | null = message && JSON.parse(message);
 
   if (data) {
     const clients = bidClients.get(data.dealId);
@@ -41,10 +47,10 @@ const wss = new WebSocket.Server({
   port: 8080,
 });
 
-function keepAlive() {
+function keepAlive(this: WebSocketWithHeartBeat) {
   this.isAlive = true;
 }
-function registerClient(dealId, client) {
+function registerClient(dealId: string, client: WebSocketWithHeartBeat) {
   const currentClients = bidClients.get(dealId);
 
   client.isAlive = true;
@@ -57,20 +63,22 @@ function registerClient(dealId, client) {
   }
 }
 
-wss.on('connection', (ws, req) => {
-  const { query } = url.parse(req.url, true);
+wss.on('connection', (ws: WebSocketWithHeartBeat, req) => {
+  if (req.url) {
+    const { query } = url.parse(req.url, true);
 
-  if (query && query.dealId) {
-    registerClient(query.dealId, ws);
+    if (query && query.dealId) {
+      registerClient(query.dealId as string, ws);
+    }
+
+    ws.on('message', message => {
+      console.log(`Received: ${message}`);
+    });
   }
-
-  ws.on('message', message => {
-    console.log(`Received: ${message}`);
-  });
 });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-function noop() {}
+function noop() { }
 const intervalId = setInterval(() => {
   bidClients.forEach((clients, key) => {
     clients.forEach(client => {
@@ -96,7 +104,7 @@ wss.on('close', () => {
 function gracefulShutdown() {
   console.log(`Process ${process.pid} is shutting down...`);
 
-  Promise.allSettled([
+  Promise.all([
     new Promise(fulfill => {
       redisClient.quit(() => {
         fulfill();
