@@ -1,6 +1,8 @@
 # bid-it
 
-Scaleable Bidding System With Microservices Architecture
+Scalable Bidding System With Microservices Architecture
+
+> Example of frontend application using this service is [bid-it-app](https://github.com/malcolm-kee/bid-it-app)
 
 ## Architecture
 
