@@ -10,7 +10,7 @@ Scalable Bidding System With Microservices Architecture
 
 1. REST API is a NestJS application. [Source code](apps/bid-it/src/main.ts)
 1. Bid Engine is a NodeJS script. [Source code](scripts/src/engine.ts)
-1. Websocket server is a NodeJS script. [Source code](scripts/src/socket.ts)
+1. Websocket server is a NestJS application. [Source code](apps/socket/src/main.ts)
 
 ## Installation
 
