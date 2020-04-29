@@ -15,7 +15,7 @@ const redisClient = redis.createClient(process.env.REDIS_URL as string);
 
 redisClient
   .on('connect', () => console.log('redis client connected'))
-  .on('error', err => {
+  .on('error', (err) => {
     console.error('error on redis client');
     console.error(err);
   });
@@ -30,14 +30,14 @@ redisClient.on('message', (channel, message) => {
         type: channel,
         payload: data,
       });
-      clients.forEach(client => {
+      clients.forEach((client) => {
         client.send(dataToClient);
       });
     }
   }
 });
 
-redisClient.subscribe(['bid_accepted', 'bid_rejected', 'bid_closed'], err => {
+redisClient.subscribe(['bid_accepted', 'bid_rejected', 'bid_closed'], (err) => {
   if (err) {
     console.error(err);
   }
@@ -71,7 +71,7 @@ wss.on('connection', (ws: WebSocketWithHeartBeat, req) => {
       registerClient(query.dealId as string, ws);
     }
 
-    ws.on('message', message => {
+    ws.on('message', (message) => {
       console.log(`Received: ${message}`);
     });
   }
@@ -81,7 +81,7 @@ wss.on('connection', (ws: WebSocketWithHeartBeat, req) => {
 function noop() {}
 const intervalId = setInterval(() => {
   bidClients.forEach((clients, key) => {
-    clients.forEach(client => {
+    clients.forEach((client) => {
       if (!client.isAlive) {
         if (clients.length === 1) {
           bidClients.delete(key);
@@ -105,12 +105,12 @@ function gracefulShutdown() {
   console.log(`Process ${process.pid} is shutting down...`);
 
   Promise.all([
-    new Promise(fulfill => {
+    new Promise((fulfill) => {
       redisClient.quit(() => {
         fulfill();
       });
     }),
-    new Promise(fulfill => {
+    new Promise((fulfill) => {
       wss.close(() => fulfill());
     }),
   ]).finally(() => process.exit(0));

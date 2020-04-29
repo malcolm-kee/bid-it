@@ -30,7 +30,7 @@ const redisClient = redis.createClient(redisUrl);
 
 redisClient
   .on('connect', () => console.log('redis client connected'))
-  .on('error', err => {
+  .on('error', (err) => {
     console.error('error on redis client');
     console.error(err);
   });
@@ -43,7 +43,7 @@ redisClient.on('message', (channel, message) => {
   }
 });
 
-redisClient.subscribe(['bid_accepted', 'bid_rejected'], err => {
+redisClient.subscribe(['bid_accepted', 'bid_rejected'], (err) => {
   if (err) {
     console.error(err);
   }
@@ -53,12 +53,12 @@ function gracefulShutdown() {
   console.log(`Process ${process.pid} is shutting down...`);
 
   Promise.all([
-    new Promise(fulfill => {
+    new Promise((fulfill) => {
       redisClient.quit(() => {
         fulfill();
       });
     }),
-    new Promise(fulfill => {
+    new Promise((fulfill) => {
       mongoose.disconnect(() => fulfill());
     }),
   ]).finally(() => process.exit(0));
@@ -74,7 +74,7 @@ process.on('SIGINT', gracefulShutdown);
     .then(() => {
       console.log(`Reporting service connected to DB`);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(`Error connecting to reporting DB`);
       console.log(err);
       gracefulShutdown();

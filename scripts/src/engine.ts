@@ -38,14 +38,14 @@ redisClient
   .on('connect', () => {
     console.log('redis client connected');
   })
-  .on('error', err => {
+  .on('error', (err) => {
     console.error('error on redis');
     console.error(err);
   });
 
 function publishEvent(key: string, value) {
   return new Promise((fulfill, reject) => {
-    redisClient.publish(key, JSON.stringify(value), err => {
+    redisClient.publish(key, JSON.stringify(value), (err) => {
       if (err) {
         return reject(err);
       } else {
@@ -82,12 +82,12 @@ function gracefulShutdown() {
   console.log(`Process ${process.pid} is shutting down...`);
 
   Promise.all([
-    new Promise(fulfill => {
+    new Promise((fulfill) => {
       redisClient.quit(() => {
         fulfill();
       });
     }),
-    new Promise(fulfill => {
+    new Promise((fulfill) => {
       mongoose.disconnect(() => fulfill());
     }),
   ]).finally(() => process.exit(0));
@@ -100,7 +100,7 @@ function startup() {
       console.log('Connected to DB');
       listenForBid();
     })
-    .catch(err => {
+    .catch((err) => {
       console.error('Error connecting to DB');
       console.log(err);
       gracefulShutdown();
