@@ -1,3 +1,4 @@
+import { REDIS_URL } from '@app/const';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -13,7 +14,7 @@ async function bootstrap() {
   app.connectMicroservice({
     transport: Transport.REDIS,
     options: {
-      url: app.get(ConfigService).get('REDIS_URL'),
+      url: app.get(ConfigService).get(REDIS_URL),
     },
   });
 

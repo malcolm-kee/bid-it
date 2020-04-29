@@ -12,6 +12,6 @@ RUN yarn
 
 COPY --chown=node:node . .
 
-RUN yarn build:scripts
+RUN yarn build:socket
 
-CMD ["node", "dist/scripts/socket.js"]
+CMD ["node", "dist/apps/socket/main.js"]

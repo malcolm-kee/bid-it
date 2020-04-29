@@ -25,6 +25,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/deal-data/tsconfig.lib.json"
       }
+    },
+    "socket": {
+      "type": "application",
+      "root": "apps/socket",
+      "entryFile": "main",
+      "sourceRoot": "apps/socket/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/socket/tsconfig.app.json"
+      }
+    },
+    "const": {
+      "type": "library",
+      "root": "libs/const",
+      "entryFile": "index",
+      "sourceRoot": "libs/const/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/const/tsconfig.lib.json"
+      }
     }
   }
 }

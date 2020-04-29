@@ -1,3 +1,4 @@
+import { REDIS_URL } from '@app/const';
 import { DealDataModule } from '@app/deal-data';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
@@ -22,7 +23,7 @@ import { BID_QUEUE, EVENT_SERVICE } from './deal.type';
     {
       provide: EVENT_SERVICE,
       useFactory: (configService: ConfigService) => {
-        const redisUrl = configService.get<string>('REDIS_URL');
+        const redisUrl = configService.get<string>(REDIS_URL);
         return ClientProxyFactory.create({
           transport: Transport.REDIS,
           options: {

@@ -1,8 +1,13 @@
-import { Controller, Post, Body, Res, HttpCode } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto, LoginDto } from './user.dto';
-import { Response } from 'express';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
+import { CreateUserDto, LoginDto } from './user.dto';
+import { UserService } from './user.service';
 
 @Controller()
 export class UserController {
@@ -29,15 +34,13 @@ export class UserController {
     status: 403,
     description: 'Invalid email',
   })
-  async login(@Body() loginDto: LoginDto, @Res() response: Response) {
+  async login(@Body() loginDto: LoginDto) {
     const user = await this.userService.getByEmail(loginDto.email);
 
     if (!user) {
-      return response.status(403).json({
-        message: 'Invalid Email',
-      });
+      throw new UnauthorizedException('Invalid Email');
     }
 
-    return response.json(user);
+    return user;
   }
 }

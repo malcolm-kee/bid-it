@@ -18,6 +18,12 @@
       ],
       "@app/deal-data/*": [
         "libs/deal-data/src/*"
+      ],
+      "@app/const": [
+        "libs/const/src"
+      ],
+      "@app/const/*": [
+        "libs/const/src/*"
       ]
     }
   },

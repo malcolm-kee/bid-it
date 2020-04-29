@@ -12,6 +12,6 @@ RUN yarn
 
 COPY --chown=node:node . .
 
-RUN yarn build
+RUN yarn build:rest
 
 CMD ["node", "dist/apps/bid-it/main.js"]

@@ -14,7 +14,6 @@ module.exports = {
   externals: [nodeExternals()],
   entry: {
     engine: path.resolve(__dirname, 'src', 'engine.ts'),
-    socket: path.resolve(__dirname, 'src', 'socket.ts'),
     reporting: path.resolve(__dirname, 'src', 'reporting.ts'),
     'generate-report': path.resolve(__dirname, 'src', 'generate-report.ts'),
   },

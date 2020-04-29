@@ -36,3 +36,18 @@ export interface PlaceBidData {
   readonly dealerId: string;
   readonly price: number;
 }
+
+export const DealEvents = {
+  bid_close: 'bid_close',
+  bid_accepted: 'bid_accepted',
+  bid_rejected: 'bid_rejected',
+};
+
+export type DealEventMap = {
+  bid_close: {
+    dealId: string;
+    details: DealData;
+  };
+  bid_accepted: PlaceBidData;
+  bid_rejected: PlaceBidData;
+};

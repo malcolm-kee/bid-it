@@ -1,0 +1,1 @@
+export const EVENT_SERVICE = 'EVENT_SERVICE';
