@@ -47,6 +47,8 @@ export class PostBidDto {
   @ApiProperty({
     description: 'Id for the user that place the bid',
   })
+  @IsString()
+  @IsNotEmpty()
   readonly dealerId: string;
 
   @ApiProperty({

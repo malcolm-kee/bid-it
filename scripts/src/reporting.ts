@@ -36,10 +36,10 @@ redisClient
   });
 
 redisClient.on('message', (channel, message) => {
-  const data = JSON.parse(message);
+  const parsedMsg = JSON.parse(message);
 
-  if (data) {
-    AcceptedBidData.create({ type: channel, data });
+  if (parsedMsg && parsedMsg.data) {
+    AcceptedBidData.create({ type: channel, data: parsedMsg.data });
   }
 });
 
