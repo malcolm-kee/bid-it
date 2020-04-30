@@ -1,3 +1,5 @@
+import { DEALS_DB_URL, USERS_DB_URL } from '@app/const';
+import { dealConnectionName } from '@app/deal-data';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -14,15 +16,15 @@ import { UserModule } from './user/user.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('DEALS_DB_URL'),
+        uri: configService.get<string>(DEALS_DB_URL),
       }),
       inject: [ConfigService],
-      connectionName: 'deals',
+      connectionName: dealConnectionName,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('USERS_DB_URL'),
+        uri: configService.get<string>(USERS_DB_URL),
       }),
       inject: [ConfigService],
       connectionName: 'users',

@@ -43,6 +43,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/const/tsconfig.lib.json"
       }
+    },
+    "engine": {
+      "type": "application",
+      "root": "apps/engine",
+      "entryFile": "main",
+      "sourceRoot": "apps/engine/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/engine/tsconfig.app.json"
+      }
     }
   }
 }

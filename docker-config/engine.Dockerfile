@@ -12,6 +12,6 @@ RUN yarn
 
 COPY --chown=node:node . .
 
-RUN yarn build:scripts
+RUN yarn build:engine
 
-CMD ["node", "dist/scripts/engine.js"]
+CMD ["node", "dist/apps/engine/main.js"]

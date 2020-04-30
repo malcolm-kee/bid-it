@@ -13,7 +13,6 @@ module.exports = {
   target: 'node',
   externals: [nodeExternals()],
   entry: {
-    engine: path.resolve(__dirname, 'src', 'engine.ts'),
     reporting: path.resolve(__dirname, 'src', 'reporting.ts'),
     'generate-report': path.resolve(__dirname, 'src', 'generate-report.ts'),
   },

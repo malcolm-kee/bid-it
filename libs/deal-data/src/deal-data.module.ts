@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DealDataSchema } from './deal-data.schema';
 import { DealDataService } from './deal-data.service';
-import { DEAL_SCHEMA_NAME } from './deal-data.type';
+import { dealConnectionName, DEAL_SCHEMA_NAME } from './deal-data.type';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { DEAL_SCHEMA_NAME } from './deal-data.type';
           schema: DealDataSchema,
         },
       ],
-      'deals'
+      dealConnectionName
     ),
   ],
   providers: [DealDataService],

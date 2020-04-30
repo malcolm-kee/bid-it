@@ -1,10 +1,11 @@
+import { BID_QUEUE } from '@app/const';
 import { DealDataService, PlaceBidData } from '@app/deal-data';
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Interval } from '@nestjs/schedule';
 import { Queue } from 'bull';
-import { BID_QUEUE, EVENT_SERVICE } from './deal.type';
+import { EVENT_SERVICE } from './deal.type';
 
 @Injectable()
 export class DealService {

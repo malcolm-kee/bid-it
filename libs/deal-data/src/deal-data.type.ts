@@ -16,6 +16,8 @@ export interface DealDocument extends Document, DealData {}
 
 export const DEAL_SCHEMA_NAME = 'Deal';
 
+export const dealConnectionName = 'deals';
+
 export interface CreateDealData {
   readonly name: string;
   readonly startingPrice: number;

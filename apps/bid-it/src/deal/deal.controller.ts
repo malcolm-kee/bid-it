@@ -3,26 +3,22 @@ import {
   Body,
   Controller,
   Get,
-  Inject,
   Logger,
+  NotFoundException,
   Param,
   Post,
   Put,
-  Res,
 } from '@nestjs/common';
-import { ClientProxy, EventPattern } from '@nestjs/microservices';
-import { Response } from 'express';
+import { EventPattern } from '@nestjs/microservices';
 import { v4 as uuid } from 'uuid';
 import { AcceptBidDto, CreateDealDto, PostBidDto } from './deal.dto';
 import { DealService } from './deal.service';
-import { EVENT_SERVICE } from './deal.type';
 
 @Controller('deal')
 export class DealController {
   constructor(
     private readonly dealService: DealDataService,
-    private readonly helperService: DealService,
-    @Inject(EVENT_SERVICE) private readonly client: ClientProxy
+    private readonly helperService: DealService
   ) {}
 
   @Get()
@@ -31,14 +27,12 @@ export class DealController {
   }
 
   @Get(':id')
-  async getDeal(@Param('id') id: string, @Res() response: Response) {
+  async getDeal(@Param('id') id: string) {
     const deal = await this.dealService.getOne(id);
     if (!deal) {
-      return response.status(404).json({
-        message: 'Not Found',
-      });
+      throw new NotFoundException();
     }
-    return response.status(200).json(deal);
+    return deal;
   }
 
   @Post()
