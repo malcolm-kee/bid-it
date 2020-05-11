@@ -4,7 +4,6 @@ import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
-import { EngineController } from './engine.controller';
 import { EngineProcessor } from './engine.processor';
 import { EngineService } from './engine.service';
 import { EVENT_SERVICE } from './engine.type';
@@ -23,7 +22,6 @@ import { EVENT_SERVICE } from './engine.type';
     }),
     DealDataModule,
   ],
-  controllers: [EngineController],
   providers: [
     {
       provide: EVENT_SERVICE,

@@ -29,7 +29,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/bid-it/test/jest-e2e.json",
+    "test:e2e": "jest --config ./jest.e2e.js --runInBand --coverage",
     "setup": "node simulate/setup.js",
     "simulate": "node simulate/simulate.js",
     "report": "node dist/scripts/generate-report.js"
@@ -84,6 +84,7 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
     "jest": "^26.0.1",
+    "mongodb-memory-server": "^6.6.0",
     "prettier": "^2.0.5",
     "supertest": "^4.0.2",
     "ts-jest": "^25.4.0",
