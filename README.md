@@ -1,5 +1,7 @@
 # bid-it
 
+[![Coverage Status](https://coveralls.io/repos/github/malcolm-kee/bid-it/badge.svg?branch=master)](https://coveralls.io/github/malcolm-kee/bid-it?branch=master)
+
 Scalable Bidding System With Microservices Architecture
 
 > Example of frontend application using this service is [bid-it-app](https://github.com/malcolm-kee/bid-it-app)
