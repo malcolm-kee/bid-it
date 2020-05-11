@@ -6,14 +6,23 @@ import { EngineService } from './engine.service';
 
 @Processor(BID_QUEUE)
 export class EngineProcessor {
+  private lastSuccessPrice: number;
+
   constructor(private readonly engineService: EngineService) {}
 
   @Process()
   async processBid(job: Job<PlaceBidData>) {
-    const success = await this.engineService.checkIfBidSuccess(job.data);
+    const isSuccess =
+      this.lastSuccessPrice && this.lastSuccessPrice >= job.data.price
+        ? false
+        : await this.engineService.checkIfBidSuccess(job.data);
     await this.engineService.announceBidResult(
-      success ? 'bid_accepted' : 'bid_rejected',
+      isSuccess ? 'bid_accepted' : 'bid_rejected',
       job.data
     );
+
+    if (isSuccess) {
+      this.lastSuccessPrice = job.data.price;
+    }
   }
 }

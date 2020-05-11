@@ -58,7 +58,9 @@ test(`e2e integrations`, async () => {
     client.onerror = reject;
   });
 
-  const onSocketMsg = jest.fn();
+  const onSocketMsg = jest.fn(
+    (ev: WebSocket.MessageEvent) => JSON.parse(ev.data as string).type
+  );
 
   socketClient.onmessage = onSocketMsg;
 
@@ -72,8 +74,6 @@ test(`e2e integrations`, async () => {
     .set('Accept', 'application/json')
     .set('Content-Type', 'application/json')
     .expect(200);
-
-  await waitForMs(250);
 
   await agent
     .put('/deal')
@@ -89,6 +89,8 @@ test(`e2e integrations`, async () => {
   await waitForMs(250);
 
   expect(onSocketMsg).toHaveBeenCalledTimes(2);
+  expect(onSocketMsg).toHaveNthReturnedWith(1, 'bid_accepted');
+  expect(onSocketMsg).toHaveNthReturnedWith(2, 'bid_rejected');
 });
 
 async function getRestApp(mongoDb: MongoMemoryServer) {
