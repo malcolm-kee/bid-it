@@ -1,19 +1,33 @@
 import { BID_QUEUE } from '@app/const';
 import { DealDataService, PlaceBidData } from '@app/deal-data';
 import { InjectQueue } from '@nestjs/bull';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Interval } from '@nestjs/schedule';
 import { Queue } from 'bull';
 import { EVENT_SERVICE } from './deal.type';
 
 @Injectable()
-export class DealService {
+export class DealService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly dealDataService: DealDataService,
     @Inject(EVENT_SERVICE) private readonly client: ClientProxy,
     @InjectQueue(BID_QUEUE) private readonly bidQueue: Queue
   ) {}
+
+  onModuleInit() {
+    return this.client.connect();
+  }
+
+  onModuleDestroy() {
+    return this.client.close();
+  }
 
   @Interval(1000)
   async closeDealAndAnnounce() {

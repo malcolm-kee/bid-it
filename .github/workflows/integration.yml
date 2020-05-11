@@ -27,3 +27,8 @@ jobs:
 
       - name: Integration Testing
         run: yarn test:e2e
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -35,3 +35,6 @@ export const createDealData = ({
     endedAt: endedAt || twoHoursLater,
   };
 };
+
+export const waitForMs = (ms: number) =>
+  new Promise((fulfill) => setTimeout(fulfill, ms));
