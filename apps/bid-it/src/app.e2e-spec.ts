@@ -128,5 +128,11 @@ describe('Rest (e2e)', () => {
       .expect(400);
 
     await agent.post('/login').send({}).expect(400);
+    await agent
+      .post('/login')
+      .send({
+        email: 'mk@89757.com',
+      })
+      .expect(401);
   });
 });

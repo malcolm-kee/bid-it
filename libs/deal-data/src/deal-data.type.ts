@@ -40,9 +40,9 @@ export interface PlaceBidData {
 }
 
 export const DealEvents = {
-  bid_close: 'bid_close',
-  bid_accepted: 'bid_accepted',
-  bid_rejected: 'bid_rejected',
+  bidClose: 'bid_close',
+  bidAccepted: 'bid_accepted',
+  bidRejected: 'bid_rejected',
 };
 
 export type DealEventMap = {

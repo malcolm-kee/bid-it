@@ -1,5 +1,5 @@
 import { BID_QUEUE } from '@app/const';
-import { DealDataService, PlaceBidData } from '@app/deal-data';
+import { DealDataService, DealEvents, PlaceBidData } from '@app/deal-data';
 import { InjectQueue } from '@nestjs/bull';
 import {
   Inject,
@@ -35,10 +35,12 @@ export class DealService implements OnModuleInit, OnModuleDestroy {
 
     for (const deal of deals) {
       await this.dealDataService.closeDeal(deal.id);
-      this.client.emit('bid_closed', {
-        dealId: deal.id,
-        details: deal.toJSON(),
-      });
+      await this.client
+        .emit(DealEvents.bidClose, {
+          dealId: deal.id,
+          details: deal.toJSON(),
+        })
+        .toPromise();
       Logger.log(`closed deal`);
       Logger.log(deal);
     }

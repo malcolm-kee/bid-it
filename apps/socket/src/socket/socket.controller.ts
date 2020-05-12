@@ -7,17 +7,17 @@ import { SocketGateway } from './socket.gateway';
 export class SocketController {
   constructor(private readonly socketGateway: SocketGateway) {}
 
-  @EventPattern(DealEvents.bid_accepted)
+  @EventPattern(DealEvents.bidAccepted)
   notifyBidAccepted(data: DealEventMap['bid_accepted']) {
     this.socketGateway.notifyEvent('bid_accepted', data);
   }
 
-  @EventPattern(DealEvents.bid_rejected)
+  @EventPattern(DealEvents.bidRejected)
   notifyBidRejected(data: DealEventMap['bid_rejected']) {
     this.socketGateway.notifyEvent('bid_rejected', data);
   }
 
-  @EventPattern(DealEvents.bid_close)
+  @EventPattern(DealEvents.bidClose)
   notifyBidClosed(data: DealEventMap['bid_close']) {
     this.socketGateway.notifyEvent('bid_close', data);
   }
