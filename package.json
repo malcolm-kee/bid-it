@@ -49,7 +49,7 @@
     "dotenv": "^8.2.0",
     "mongoose": "^5.9.10",
     "mongoose-unique-validator": "^2.0.3",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "redis": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
